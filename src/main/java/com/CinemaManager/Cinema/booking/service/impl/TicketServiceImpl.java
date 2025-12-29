@@ -50,27 +50,23 @@ public class TicketServiceImpl implements TicketService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found with id: " + purchaseDTO.getUserId()));
 
-        // Получаем места
         List<Seat> seats = seatRepository.findByIdIn(purchaseDTO.getSeatIds());
         if (seats.size() != purchaseDTO.getSeatIds().size()) {
             throw new BusinessException("Some seats not found");
         }
 
-        // Проверяем, что все места находятся в том же зале, что и сеанс
         for (Seat seat : seats) {
             if (!seat.getHall().getId().equals(session.getHall().getId())) {
                 throw new BusinessException("Seat " + seat.getId() + " is not in the correct hall");
             }
         }
 
-        // Проверяем доступность мест
         boolean areSeatsAvailable = ticketRepository.areSeatsAvailable(
                 purchaseDTO.getSessionId(), purchaseDTO.getSeatIds());
         if (!areSeatsAvailable) {
             throw new BusinessException("Some seats are already occupied");
         }
 
-        // Создаем билеты
         List<Ticket> tickets = new ArrayList<>();
         List<TicketPurchaseResponseDTO.TicketInfoDTO> purchasedTicketsInfo = new ArrayList<>();
         double totalAmount = 0.0;
@@ -100,10 +96,8 @@ public class TicketServiceImpl implements TicketService {
             purchasedTicketsInfo.add(ticketInfo);
         }
 
-        // Сохраняем билеты
         List<Ticket> savedTickets = ticketRepository.saveAll(tickets);
 
-        // Генерируем номера билетов
         for (int i = 0; i < savedTickets.size(); i++) {
             Ticket ticket = savedTickets.get(i);
             purchasedTicketsInfo.get(i).setTicketNumber(ticket.getTicketNumber());
@@ -128,7 +122,6 @@ public class TicketServiceImpl implements TicketService {
         log.info("Reserving tickets for session ID: {}, seats: {}",
                 purchaseDTO.getSessionId(), purchaseDTO.getSeatIds());
 
-        // Аналогичная логика, но с статусом BOOKED и без purchaseTime
         Session session = sessionRepository.findById(purchaseDTO.getSessionId())
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "Session not found with id: " + purchaseDTO.getSessionId()));

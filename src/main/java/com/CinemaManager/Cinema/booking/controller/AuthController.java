@@ -33,7 +33,6 @@ public class AuthController {
     @GetMapping("/profile")
     public ResponseEntity<ApiResponse<UserDTO>> getCurrentUserProfile() {
         // В реальном проекте здесь бы брали ID из токена/сессии
-        // Для учебного проекта можно передавать userId в заголовке
         // Пока что возвращаем заглушку
         return ResponseEntity.ok(ApiResponse.success(
                 "Требуется реализация получения профиля", null));

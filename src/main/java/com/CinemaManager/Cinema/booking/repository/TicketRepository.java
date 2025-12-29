@@ -16,7 +16,6 @@ import java.util.Optional;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Long> {
 
-    // 1. Базовые методы поиска
     List<Ticket> findByUser(User user);
     List<Ticket> findByUserId(Long userId);
     List<Ticket> findBySessionId(Long sessionId);
@@ -27,7 +26,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Long> {
     Optional<Ticket> findBySessionIdAndSeatId(Long sessionId, Long seatId);
     List<Ticket> findByIdIn(List<Long> ticketIds);
 
-    // 2. Методы подсчёта
     Long countByUserId(Long userId);
     Long countByStatus(Ticket.TicketStatus status);
 

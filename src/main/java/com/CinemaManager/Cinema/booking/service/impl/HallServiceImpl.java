@@ -90,11 +90,9 @@ public class HallServiceImpl implements HallService {
         Hall hall = hallRepository.findById(hallId)
                 .orElseThrow(() -> new ResourceNotFoundException("Hall not found with id: " + hallId));
 
-        // Удаляем существующие места (если есть)
         List<Seat> existingSeats = seatRepository.findByHall(hall);
         seatRepository.deleteAll(existingSeats);
 
-        // Создаем новые места в соответствии с конфигурацией зала
         List<Seat> seats = new ArrayList<>();
         for (int row = 1; row <= hall.getTotalRows(); row++) {
             for (int seatNum = 1; seatNum <= hall.getSeatsPerRow(); seatNum++) {

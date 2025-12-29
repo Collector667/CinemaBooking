@@ -26,12 +26,10 @@ public class AuthServiceImpl implements AuthService {
     public UserDTO register(RegisterDTO registerDTO) {
         log.info("Registering new user: {}", registerDTO.getEmail());
 
-        // Проверяем, существует ли пользователь с таким email
         if (userRepository.existsByEmail(registerDTO.getEmail())) {
             throw new BusinessException("User with email " + registerDTO.getEmail() + " already exists");
         }
 
-        // Создаем User из RegisterDTO
         User user = User.builder()
                 .firstName(registerDTO.getFirstName())
                 .lastName(registerDTO.getLastName())
@@ -52,35 +50,27 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponseDTO login(LoginDTO loginDTO) {
         log.info("Login attempt for user: {}", loginDTO.getEmail());
 
-        // Находим пользователя по email
         User user = userRepository.findByEmail(loginDTO.getEmail())
                 .orElseThrow(() -> new BusinessException("Invalid email or password"));
 
-        // Проверяем пароль
         if (!passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             throw new BusinessException("Invalid email or password");
         }
 
-        // Генерируем токен (для учебного проекта используем упрощённый подход)
         String token = generateToken(user);
 
         log.info("User logged in successfully: {}", loginDTO.getEmail());
 
-        // Используем builder из AuthResponseDTO
         return AuthResponseDTO.builder()
                 .token(token)
                 .user(cinemaMapper.toDTO(user))
-                .expiresIn(3600L) // 1 час в секундах
+                .expiresIn(3600L)
                 .tokenType("Bearer")
                 .build();
     }
 
-    /**
-     * Упрощённая генерация токена для учебного проекта
-     * В реальном проекте используйте JWT (jsonwebtoken)
-     */
+
     private String generateToken(User user) {
-        // Создаём простой токен: user_id + timestamp + random
         return "demo-token-" + user.getId() +
                 "-" + System.currentTimeMillis() +
                 "-" + (int)(Math.random() * 1000);

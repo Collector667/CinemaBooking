@@ -19,9 +19,7 @@ public class CinemaApplication {
 		System.out.println("=========================================");
 		System.out.println("🌐 Local: http://localhost:8080");
 		System.out.println("📡 API Test: http://localhost:8080/api/test");
-		System.out.println("🏥 Health: http://localhost:8080/health");
 		System.out.println("🎥 Movies API: http://localhost:8080/api/movies");
-		System.out.println("💾 Database: MySQL (cinema_db)");
-		System.out.println("=========================================\n");
+
 	}
 }

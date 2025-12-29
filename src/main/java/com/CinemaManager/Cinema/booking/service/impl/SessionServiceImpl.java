@@ -108,7 +108,6 @@ public class SessionServiceImpl implements SessionService {
                     .orElseThrow(() -> new ResourceNotFoundException("Hall not found with id: " + sessionDTO.getHallId()));
         }
 
-        // Проверяем, что зал свободен в новое время (если время изменилось)
         if (!existingSession.getStartTime().equals(sessionDTO.getStartTime())) {
             if (sessionRepository.hasOverlappingSessions(
                     hall.getId(),
@@ -247,7 +246,6 @@ public class SessionServiceImpl implements SessionService {
                 .collect(Collectors.toList());
     }
 
-    // Метод для проверки доступности зала
     public boolean isHallAvailable(Long hallId, LocalDateTime startTime, LocalDateTime endTime, Long excludeSessionId) {
         return !sessionRepository.hasOverlappingSessions(hallId, excludeSessionId, startTime, endTime);
     }

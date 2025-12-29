@@ -90,13 +90,11 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new ResourceNotFoundException(
                         "User not found with id: " + id));
 
-        // Проверяем email на уникальность (если изменился)
         if (!existingUser.getEmail().equals(userDTO.getEmail()) &&
                 userRepository.existsByEmail(userDTO.getEmail())) {
             throw new BusinessException("User with email " + userDTO.getEmail() + " already exists");
         }
 
-        // Обновляем поля
         existingUser.setFirstName(userDTO.getFirstName());
         existingUser.setLastName(userDTO.getLastName());
         existingUser.setEmail(userDTO.getEmail());

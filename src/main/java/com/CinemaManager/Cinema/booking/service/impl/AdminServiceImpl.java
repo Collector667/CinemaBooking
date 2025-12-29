@@ -76,10 +76,8 @@ public class AdminServiceImpl implements AdminService {
         LocalDateTime startDateTime = startDate.atStartOfDay();
         LocalDateTime endDateTime = endDate.atTime(23, 59, 59);
 
-        // Общая выручка за период
         Double totalRevenue = ticketRepository.calculateRevenueByPeriod(startDateTime, endDateTime);
 
-        // Выручка по дням
         Map<LocalDate, Double> dailyRevenue = new LinkedHashMap<>();
         LocalDate currentDate = startDate;
 
